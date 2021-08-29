@@ -1,36 +1,30 @@
-class Stack:
-    
+class Deque:
     def __init__(self):
-        self.stack_arr = []
-        
-    def push(self,value):
-        self.stack_arr.append(value)
-        
-    def pop(self):
-        if len(self.stack_arr) == 0:
-            print('Stack is empty!')
-            return None
-        else:
-            self.stack_arr.pop()
-        
-    def get_head(self):
-        if len(self.stack_arr) == 0:
-            print('Stack is empty!')
-            return None
-        else:
-            return self.stack_arr[-1]
-    
+    	self.items = []
+    def isEmpty(self):
+    	return self.items ==[]
+    def addFront(self,items):
+    	self.items.append(items)
+    def addLast(self,items):
+    	self.items.insert(0,items)
+    def removeFront(self):
+    	return self.items.pop()
+    def removeLast(self):
+    	return self.items.pop(0)
+    def size(self):
+    	return len(self.items)
     def display(self):
-        if len(self.stack_arr) == 0:
-            print('Stack is empty!')
-            return None
-        else:
-            print(self.stack_arr)
-    
-stack = Stack()
-stack.push(4)
-stack.push(5)
-stack.push(6)
-stack.pop()
-stack.display()
-stack.get_head()
+    	print(self.items)
+D = Deque()
+D.addFront(1)
+D.addFront(11)
+D.addFront(21)
+D.addLast(4)
+D.addLast(14)
+D.addLast(24)
+print("adding from head and tail")
+D.display()
+D.removeFront()
+D.removeLast()
+print("removing from head and tail")
+D.display()
