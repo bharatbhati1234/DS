@@ -1,106 +1,58 @@
-class ArrayQueue:
-    """FIFO queue implementation using a Python list as underlying storage."""
-    DEFAULT_CAPACITY = 10          # moderate capacity for all new queues
+class MyCircularQueue():
+    def __init__(self, k):
+        self.k = k
+        self.queue = [None] * k
+        self.head = self.tail = -1
 
-    def __init__(self):
-        """Create an empty queue."""
-        self._data = [None] * ArrayQueue.DEFAULT_CAPACITY
-        self._size = 0
-        self._front = 0
-        self._back = 0
+    # Insert an element into the circular queue
+    def enqueue(self, data):
+        if ((self.tail + 1) % self.k == self.head):
+            print("The circular queue is full\n")
+        elif (self.head == -1):
+            self.head = 0
+            self.tail = 0
+            self.queue[self.tail] = data
+        else:
+            self.tail = (self.tail + 1) % self.k
+            self.queue[self.tail] = data
 
-    def __len__(self):
-        """Return the number of elements in the queue."""
-        return self._size
+    # Delete an element from the circular queue
+    def dequeue(self):
+        if (self.head == -1):
+            print("The circular queue is empty\n")
+        elif (self.head == self.tail):
+            temp = self.queue[self.head]
+            self.head = -1
+            self.tail = -1
+            return temp
+        else:
+            temp = self.queue[self.head]
+            self.head = (self.head + 1) % self.k
+            return temp
 
-    def is_empty(self):
-        """Return True if the queue is empty."""
-        return self._size == 0
+    def printCQueue(self):
+        if(self.head == -1):
+            print("No element in the circular queue")
+        elif (self.tail >= self.head):
+            for i in range(self.head, self.tail + 1):
+                print(self.queue[i], end=" ")
+            print()
+        else:
+            for i in range(self.head, self.k):
+                print(self.queue[i], end=" ")
+            for i in range(0, self.tail + 1):
+                print(self.queue[i], end=" ")
+            print()
 
-    def first(self):
-        """Return (but do not remove) the element at the front of the queue.
-        Raise Empty exception if the queue is empty.
-        """
-        if self.is_empty():
-            raise Empty('Queue is empty')
-        return self._data[self._front]
-    
+obj = MyCircularQueue(5)
+obj.enqueue(14)
+obj.enqueue(74)
+obj.enqueue(76)
+obj.enqueue(88)
+obj.enqueue(89)
+print("Initial queue")
+obj.printCQueue()
 
-    def dequeueStart(self):
-        """Remove and return the first element of the queue (i.e., FIFO).
-        Raise Empty exception if the queue is empty.
-        """
-        if self.is_empty():
-            raise Empty('Queue is empty')
-        answer = self._data[self._front]
-        self._data[self._front] = None         # help garbage collection
-        self._front = (self._front + 1) % len(self._data)
-        self._size -= 1
-        self._back = (self._front + self._size - 1) % len(self._data)
-        return answer
-    
-    def dequeueEnd(self):
-        """Remove and return the Last element of the queue.
-        Raise Empty exception if the queue is empty.
-        """
-        if self.is_empty():
-            raise Empty('Queue is empty')
-        back = (self._front + self._size - 1) % len(self._data)
-        answer = self._data[back]
-        self._data[back] = None         # help garbage collection
-        self._front = self._front
-        self._size -= 1
-        self._back = (self._front + self._size - 1) % len(self._data)
-        return answer
-
-    def enqueueEnd(self, e):
-        """Add an element to the back of queue."""
-        if self._size == len(self._data):
-            self._resize(2 * len(self.data))     # double the array size
-        avail = (self._front + self._size) % len(self._data)
-        self._data[avail] = e
-        self._size += 1
-        self._back = (self._front + self._size - 1) % len(self._data)
-        
-    def enqueueStart(self, e):
-        """Add an element to the start of queue."""
-        if self._size == len(self._data):
-            self._resize(2 * len(self._data))     # double the array size
-        self._front = (self._front - 1) % len(self._data)
-        avail = (self._front + self._size) % len(self._data)
-        self._data[self._front] = e
-        self._size += 1
-        self._back = (self._front + self._size - 1) % len(self._data)
-
-    def _resize(self, cap):                  # we assume cap >= len(self)
-        """Resize to a new list of capacity >= len(self)."""
-        old = self._data                       # keep track of existing list
-        self._data = [None] * cap              # allocate list with new capacity
-        walk = self._front
-        for k in range(self._size):            # only consider existing elements
-            self._data[k] = old[walk]            # intentionally shift indices
-            walk = (1 + walk) % len(old)         # use old size as modulus
-        self._front = 0                          # front has been realigned
-        self._back = (self._front + self._size - 1) % len(self._data)
-        
-queue = ArrayQueue()
-queue.enqueueEnd(1)
-print(f"First Element: {queue._data[queue._front]}, Last Element: {queue._data[queue._back]}")
-queue._data
-queue.enqueueEnd(2)
-print(f"First Element: {queue._data[queue._front]}, Last Element: {queue._data[queue._back]}")
-queue._data
-queue.dequeueStart()
-print(f"First Element: {queue._data[queue._front]}, Last Element: {queue._data[queue._back]}")
-queue.enqueueEnd(3)
-print(f"First Element: {queue._data[queue._front]}, Last Element: {queue._data[queue._back]}")
-queue.enqueueEnd(4)
-print(f"First Element: {queue._data[queue._front]}, Last Element: {queue._data[queue._back]}")
-queue.dequeueStart()
-print(f"First Element: {queue._data[queue._front]}, Last Element: {queue._data[queue._back]}")
-queue.enqueueStart(5)
-print(f"First Element: {queue._data[queue._front]}, Last Element: {queue._data[queue._back]}")
-queue.dequeueEnd()
-print(f"First Element: {queue._data[queue._front]}, Last Element: {queue._data[queue._back]}")
-queue.enqueueEnd(6)
-print(f"First Element: {queue._data[queue._front]}, Last Element: {queue._data[queue._back]}")
+obj.dequeue()
+print("After removing an element from the queue")
+obj.printCQueue()
